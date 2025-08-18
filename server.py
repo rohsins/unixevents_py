@@ -1,13 +1,11 @@
-from unixevents import Linker# your ported class file
+from unixevents import Linker
 
-server = Linker("server", "channel2", debug=False)
-server.init()
+server = Linker("server", "channel2")
 
 server.receive("event2", lambda payload: (
     print("Python server got:", payload),
-    server.send("reply", {"msg": "Hello from Python!"})  # sends "s-reply"
+    server.send("replyEvent", {"msg": "Hello from Python!"})  # sends "s-reply"
 ))
 
 while True:
-    pass 
-
+    pass
