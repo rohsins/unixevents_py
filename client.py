@@ -1,25 +1,16 @@
-from unixevents import Linker
+import asyncio
 import time
-
-# Create client linker
-client = Linker('client', 'channel2')
-# link = Linker()
-# link.init('client', 'channel2', True)
+import threading
+from unixevents import Linker
 
 
-def on_ack(err, ack):
-    if err:
-        print("[CLIENT] Error:", err)
-    else:
-        print("[CLIENT] Ack from server:", ack)
+async def main():
+    client = Linker('client', 'Channel1')
 
+    client.receive('clientEvent', lambda data: print(f'data on client: {data}'))
+    client.send('serverEvent', 'requesting server to link up')
+    time.sleep(10)
+    client.close()
 
-# Send async message
-client.receive("replyEvent", lambda data: (
-    print("Receive from client: ", data)
-))
-
-client.send("event2", {"msg": "Hi from client stuff!"})
-
-time.sleep(1)  # Wait for callbacks before closing
-# link.close()
+if __name__ == "__main__":
+    asyncio.run(main())
