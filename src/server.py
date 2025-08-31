@@ -1,16 +1,14 @@
+import asyncio
 import time
-import logging
 from unixevents import Linker
 
-# Example usage
-if __name__ == "__main__":
-    # Setup logging for demo
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
 
-    server = Linker('server', 'channel')
+async def main():
+    # server = Linker('server', 'channel', True)
+    server = Linker(debug=False)
+    await server.init_async('server', 'channel', False)
+    # server.init_sync('server', 'channel', True)
+    # server.enable_debug()
 
     def callback(payload):
         print(f"Message on server: {payload}")
@@ -24,3 +22,6 @@ if __name__ == "__main__":
         time.sleep(10)
 
     server.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())

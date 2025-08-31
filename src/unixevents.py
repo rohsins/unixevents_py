@@ -25,7 +25,7 @@ class Linker:
     MESSAGE_DELIMITER = b';;'
     MAX_MESSAGE_SIZE = 1024 * 1024  # 1MB max message size
 
-    def __init__(self, role: Optional[str] = None, channel: Optional[str] = None):
+    def __init__(self, role: Optional[str] = None, channel: Optional[str] = None, debug: Optional[bool] = False):
         self._role = None
         self._channel = None
         self._socket = None
@@ -37,11 +37,11 @@ class Linker:
         self._once_handlers: Dict[str, list] = defaultdict(list)
         self._lock = threading.Lock()
         self._receive_buffer = b''
-        self._debug = False
+        self._debug = debug
 
         # Initialize if both parameters provided
         if role and channel:
-            self._init_sync(role, channel)
+            self.init_sync(role, channel)
 
     def enable_debug(self):
         self._debug = True
@@ -53,13 +53,14 @@ class Linker:
         if self._debug:
             print(*args)
 
-    def _init_sync(self, role: str, channel: str) -> bool:
+    def init_sync(self, role: str, channel: str, debug: Optional[bool] = None) -> bool:
         try:
             if role.lower() not in ['server', 'client']:
                 raise UnixEventsError(f"Invalid role: {role}. Must be 'server' or 'client'")
 
             self._role = Role(role.lower())
             self._channel = channel
+            self._debug = debug if debug is not None else self._debug
             self._running = True
 
             self._socket_path = (
@@ -107,9 +108,9 @@ class Linker:
             self.log(f"Initialization failed: {e}")
             return False
 
-    async def init(self, role: str, channel: str) -> bool:
+    async def init_async(self, role: str, channel: str, debug: Optional[bool] = None) -> bool:
         return await asyncio.get_event_loop().run_in_executor(
-            None, self._init_sync, role, channel
+            None, self.init_sync, role, channel, debug
         )
 
     def _start_server(self):
