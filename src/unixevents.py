@@ -292,10 +292,9 @@ class Linker:
 
             # Remove socket file if server
             if self._role == Role.SERVER:
-                socket_path = self._get_socket_path()
-                if os.path.exists(socket_path):
+                if os.path.exists(self._socket_path):
                     try:
-                        os.unlink(socket_path)
+                        os.unlink(self._socket_path)
                     except Exception as e:
                         self.log("Socket file removal exception: ", e)
                         pass
