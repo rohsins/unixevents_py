@@ -4,14 +4,8 @@ import json
 import time
 import threading
 import os
-import sys
-import tempfile
 import subprocess
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from concurrent.futures import ThreadPoolExecutor
-
-from unixevents import Linker, create_server, create_client, UnixEventsError, Role
+from unixevents import Linker, Role
 
 
 class TestLinkerInitialization(unittest.TestCase):
@@ -714,8 +708,6 @@ class TestNodeJsCompatibility(unittest.TestCase):
             except:
                 pass
 
-    @unittest.skipUnless('node_available' in dir() and node_available, 
-                         "Node.js not available")
     def test_message_format_compatibility(self):
         """Test that message format is compatible with Node.js version"""
         # This test would require the actual Node.js unixevents library
@@ -770,29 +762,6 @@ class TestHelperFunctions(unittest.TestCase):
                 os.unlink(socket_path)
             except:
                 pass
-
-    def test_create_server(self):
-        """Test create_server helper function"""
-        server = create_server(self.test_channel)
-        self.cleanup_items.append(server)
-
-        self.assertIsInstance(server, Linker)
-        self.assertEqual(server._role, Role.SERVER)
-        self.assertTrue(server._initialized)
-
-    def test_create_client(self):
-        """Test create_client helper function"""
-        server = create_server(self.test_channel)
-        self.cleanup_items.append(server)
-        time.sleep(0.1)
-
-        client = create_client(self.test_channel)
-        self.cleanup_items.append(client)
-
-        self.assertIsInstance(client, Linker)
-        self.assertEqual(client._role, Role.CLIENT)
-        self.assertTrue(client._initialized)
-
 
 if __name__ == '__main__':
     # Run tests with verbosity

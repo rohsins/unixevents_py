@@ -185,6 +185,11 @@ class Linker:
             event = msg_data['event']
             payload = msg_data.get('payload')
 
+            try:
+                payload = json.loads(payload)
+            except Exception:
+                pass
+
             # Call registered handlers
             self._dispatch_event(event, payload)
 

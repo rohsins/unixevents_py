@@ -1,1 +1,1 @@
-from .unixevents import Linker
+from .unixevents import Linker, Role
