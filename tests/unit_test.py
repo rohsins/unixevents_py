@@ -341,7 +341,7 @@ class TestDataTypes(unittest.TestCase):
         # Note: Based on the code, dicts are JSON stringified in payload
         self.assertEqual(len(received), 1)
         # The received data should be a JSON string of the dict
-        self.assertEqual(json.loads(received[0]), test_dict)
+        self.assertEqual(received[0], test_dict)
 
     def test_list_transmission(self):
         """Test sending list/array data"""

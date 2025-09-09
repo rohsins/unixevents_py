@@ -1,16 +1,6 @@
 # Linker
 
-A Python library for event-driven communication between processes using Unix domain sockets. Inspired by the Node.js unixevents package, Linker provides a simple and reliable way to implement inter-process communication (IPC) with an event-based architecture.
-
-## Features
-
-- 🚀 **Simple API** - Easy-to-use event-driven interface
-- 🔄 **Bidirectional Communication** - Both server and client can send and receive events
-- 🎯 **Event-Based** - Register handlers for specific events
-- 🔒 **Thread-Safe** - Safe for concurrent operations
-- 🐍 **Async Support** - Both synchronous and asynchronous APIs
-- 🛡️ **Automatic Reconnection** - Client automatically retries connection with exponential backoff
-- 📦 **Zero Dependencies** - Uses only Python standard library
+A Python library for event-driven communication between processes using Unix domain sockets.
 
 ## Installation
 
@@ -339,14 +329,12 @@ async def async_server():
     server = Linker()
     await server.init_async('server', 'async-channel')
     
-    async def handle_async_event(data):
+    def handle_async_event(data):
         print(f"Received async: {data}")
         # Simulate async processing
-        await asyncio.sleep(1)
-        await server.send_async('processed', {'status': 'done'})
+        server.send_sync('processed', {'status': 'done'})
     
-    # Note: handlers are still synchronous, but you can start async tasks
-    server.receive('process', lambda data: asyncio.create_task(handle_async_event(data)))
+    server.receive('process', handle_async_event)
     
     # Keep server running
     await asyncio.sleep(60)
