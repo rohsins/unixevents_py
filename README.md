@@ -16,18 +16,14 @@ pip install unixevents
 ```python
 from unixevents import Linker
 
-# Create a server on channel 'channel'
 server = Linker('server', 'channel')
 
-# Register event handler
 def handle_greeting(data):
     print(f"Received greeting: {data}")
-    # Send response back to client
     server.send('welcome', {'message': 'Hello from server!'})
 
 server.receive('greeting', handle_greeting)
 
-# Keep server running
 print("Server is running... Press Ctrl+C to stop")
 try:
     while True:
@@ -40,19 +36,15 @@ except KeyboardInterrupt:
 ```python
 from unixevents import Linker
 
-# Connect to server on channel 'channel'
 client = Linker('client', 'channel')
 
-# Register event handler for server responses
 def handle_welcome(data):
     print(f"Server says: {data['message']}")
 
 client.receive('welcome', handle_welcome)
 
-# Send event to server
 client.send('greeting', {'name': 'Alice', 'message': 'Hello!'})
 
-# Keep client running
 time.sleep(2)
 client.close()
 ```
@@ -78,10 +70,9 @@ Send an event with data.
 - `callback` (Callable): Optional callback function(error, success)
 
 ```python
-# Simple send
+
 linker.send('message', {'text': 'Hello'})
 
-# With callback
 def on_sent(error, success):
     if success:
         print("Message sent successfully")
@@ -194,7 +185,6 @@ def handle_request(data):
     method = data.get('method')
     params = data.get('params', {})
     
-    # Process the request
     if method == 'add':
         result = params.get('a', 0) + params.get('b', 0)
     elif method == 'multiply':
@@ -202,7 +192,6 @@ def handle_request(data):
     else:
         result = None
         
-    # Send response
     server.send('response', {
         'id': request_id,
         'result': result
@@ -240,12 +229,11 @@ def rpc_call(method, params):
         'params': params
     })
     
-    event.wait(timeout=5)  # Wait for response
+    event.wait(timeout=5)
     result = getattr(event, 'result', None)
     del pending_requests[request_id]
     return result
 
-# Make RPC calls
 result = rpc_call('add', {'a': 5, 'b': 3})
 print(f"5 + 3 = {result}")
 
@@ -269,7 +257,6 @@ def handle_join(data):
     clients.append(client_name)
     print(f"{client_name} joined")
     
-    # Notify all clients
     server.send('user_joined', {'name': client_name})
 
 server.receive('join', handle_join)
@@ -280,11 +267,9 @@ def broadcast_time():
         server.send('time_update', {'time': current_time})
         time.sleep(1)
 
-# Start broadcasting thread
 broadcast_thread = threading.Thread(target=broadcast_time, daemon=True)
 broadcast_thread.start()
 
-# Keep server running
 try:
     while True:
         time.sleep(1)
@@ -308,10 +293,8 @@ def handle_user_joined(data):
 client.receive('time_update', handle_time_update)
 client.receive('user_joined', handle_user_joined)
 
-# Join the broadcast
 client.send('join', {'name': 'Client1'})
 
-# Keep receiving broadcasts
 try:
     while True:
         time.sleep(1)
@@ -331,12 +314,10 @@ async def async_server():
     
     def handle_async_event(data):
         print(f"Received async: {data}")
-        # Simulate async processing
         server.send_sync('processed', {'status': 'done'})
     
     server.receive('process', handle_async_event)
     
-    # Keep server running
     await asyncio.sleep(60)
     server.close()
 
@@ -344,14 +325,12 @@ async def async_client():
     client = Linker()
     await client.init_async('client', 'async-channel')
     
-    # Send async message
     success = await client.send_async('process', {'data': 'test'})
     print(f"Sent: {success}")
     
     await asyncio.sleep(2)
     client.close()
 
-# Run async functions
 async def main():
     await asyncio.gather(
         async_server(),
@@ -366,12 +345,10 @@ asyncio.run(main())
 Enable debug mode to see detailed logs:
 
 ```python
-# Via constructor
+
 linker = Linker('server', 'mychannel', debug=True)
 
-# Or enable/disable dynamically
 linker.enable_debug()
-# ... debug output ...
 linker.disable_debug()
 ```
 
