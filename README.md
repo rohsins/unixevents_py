@@ -1,6 +1,21 @@
-# Linker
+# Unixevents
 
-A Python library for event-driven communication between processes using Unix domain sockets.
+**Unixevents** is a lightweight inter-process communication (IPC) library available in both **JavaScript (Node.js)** and **Python**. It enables real-time, event-driven communication across processes or applications — regardless of the language they are written in.
+
+## 🔗 Cross-Language Compatibility
+
+ - One of the core strengths of Unixevents is its **cross-language support**. A message sent over a Unixevents channel from a process written in Python can be seamlessly received by a process written in JavaScript (Node.js), and vice versa.
+ - This makes Unixevents ideal for building hybrid applications where different parts of the system are implemented in different languages but need to communicate efficiently and in real time.
+ > ℹ️ **More language support is coming soon** — Unixevents is designed with extensibility in mind, with plans to support additional programming languages in the near future.
+
+## ✅ Features
+
+- Available in **Python** and **Node.js**
+- Fully compatible **across both languages**
+- Simple, **event-driven API**
+- Uses **Unix domain sockets** under the hood for high performance and low latency
+- Supports **JSON-based message exchange**
+- Designed for **future multi-language support**
 
 ## Installation
 

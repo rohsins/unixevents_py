@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = [
   { name="Rohit Singh", email="rohsins@gmail.com" },
 ]
-description = "A small example package"
+description = "Unixevents is a lightweight inter-process communication (IPC) library available in both JavaScript (Node.js) and Python. It enables real-time, event-driven communication across processes or applications — regardless of the language they are written in."
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["unixevents", "events", "ipc", "communication"]
