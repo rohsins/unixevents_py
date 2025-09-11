@@ -1,6 +1,6 @@
 [project]
 name = "unixevents"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Rohit Singh", email="rohsins@gmail.com" },
 ]
