@@ -83,20 +83,13 @@ class Linker:
                 self._start_server()
 
             else:
-                max_retries = 10
-                retry_delay = 0.1
-
-                for i in range(max_retries):
+                while True:
                     try:
                         self._socket.connect(str(self._socket_path))
                         self.log(f"Client connected to {self._socket_path}")
                         break
                     except (FileNotFoundError, ConnectionRefusedError):
-                        if i < max_retries - 1:
-                            time.sleep(retry_delay)
-                            retry_delay = min(retry_delay * 1.5, 2.0)  # Exponential backoff
-                        else:
-                            raise UnixEventsError(f"Failed to connect to server at {self._socket_path}")
+                        time.sleep(2)
 
                 # Start receiving messages
                 self._start_receiver()
@@ -170,6 +163,8 @@ class Linker:
             except Exception as e:
                 if self._running:
                     self.log(f"Receive error: {e}")
+                    self.init_sync(self._role.value, self._channel, self._debug)
+
                 break
 
     def _process_message(self, message: bytes):
